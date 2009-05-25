@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		92952BEF0FCB3F0B00F3D16C /* PlugIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 92952BE80FCB3F0B00F3D16C /* PlugIn.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92952BF00FCB3F0B00F3D16C /* PlugIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 92952BE90FCB3F0B00F3D16C /* PlugIn.m */; };
+		92952BF10FCB3F0B00F3D16C /* PlugInManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 92952BEA0FCB3F0B00F3D16C /* PlugInManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92952BF20FCB3F0B00F3D16C /* PlugInManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92952BEB0FCB3F0B00F3D16C /* PlugInManager.m */; };
+		92952BF30FCB3F0B00F3D16C /* PlugInPriorityProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 92952BEC0FCB3F0B00F3D16C /* PlugInPriorityProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92952BF40FCB3F0B00F3D16C /* PlugInRegistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 92952BED0FCB3F0B00F3D16C /* PlugInRegistry.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92952BF50FCB3F0B00F3D16C /* PlugInRegistry.m in Sources */ = {isa = PBXBuildFile; fileRef = 92952BEE0FCB3F0B00F3D16C /* PlugInRegistry.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +26,13 @@
 		32DBCF5E0370ADEE00C91783 /* PlugIn_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugIn_Prefix.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* PlugIn.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PlugIn.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		92952BE80FCB3F0B00F3D16C /* PlugIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugIn.h; sourceTree = "<group>"; };
+		92952BE90FCB3F0B00F3D16C /* PlugIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlugIn.m; sourceTree = "<group>"; };
+		92952BEA0FCB3F0B00F3D16C /* PlugInManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugInManager.h; sourceTree = "<group>"; };
+		92952BEB0FCB3F0B00F3D16C /* PlugInManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlugInManager.m; sourceTree = "<group>"; };
+		92952BEC0FCB3F0B00F3D16C /* PlugInPriorityProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugInPriorityProtocol.h; sourceTree = "<group>"; };
+		92952BED0FCB3F0B00F3D16C /* PlugInRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugInRegistry.h; sourceTree = "<group>"; };
+		92952BEE0FCB3F0B00F3D16C /* PlugInRegistry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlugInRegistry.m; sourceTree = "<group>"; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -45,7 +59,7 @@
 		0867D691FE84028FC02AAC07 /* PlugIn */ = {
 			isa = PBXGroup;
 			children = (
-				08FB77AEFE84172EC02AAC07 /* Classes */,
+				08FB77AEFE84172EC02AAC07 /* Sources */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
@@ -72,11 +86,18 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+		08FB77AEFE84172EC02AAC07 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				92952BE80FCB3F0B00F3D16C /* PlugIn.h */,
+				92952BE90FCB3F0B00F3D16C /* PlugIn.m */,
+				92952BEA0FCB3F0B00F3D16C /* PlugInManager.h */,
+				92952BEB0FCB3F0B00F3D16C /* PlugInManager.m */,
+				92952BEC0FCB3F0B00F3D16C /* PlugInPriorityProtocol.h */,
+				92952BED0FCB3F0B00F3D16C /* PlugInRegistry.h */,
+				92952BEE0FCB3F0B00F3D16C /* PlugInRegistry.m */,
 			);
-			name = Classes;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
@@ -112,6 +133,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92952BEF0FCB3F0B00F3D16C /* PlugIn.h in Headers */,
+				92952BF10FCB3F0B00F3D16C /* PlugInManager.h in Headers */,
+				92952BF30FCB3F0B00F3D16C /* PlugInPriorityProtocol.h in Headers */,
+				92952BF40FCB3F0B00F3D16C /* PlugInRegistry.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +214,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92952BF00FCB3F0B00F3D16C /* PlugIn.m in Sources */,
+				92952BF20FCB3F0B00F3D16C /* PlugInManager.m in Sources */,
+				92952BF50FCB3F0B00F3D16C /* PlugInRegistry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
