@@ -33,7 +33,7 @@
 - (NSInvocation*) registerTarget:(id)anObject withSelector:(SEL)selector forHook:(NSString*)hookName;
 - (void) registerInvocation:(NSInvocation*)invocation forHook:(NSString*)hookName;
 
-- (void) invokeHook:(NSString*)hookName withDictionary:(NSDictionary*)dictionary;
+- (void) invokeHook:(NSString*)hookName withObject:(id)object;
 
 @end
 

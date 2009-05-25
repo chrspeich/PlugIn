@@ -21,7 +21,7 @@ enum _PlugInError {
 
 typedef enum _PlugInError PlugInError;
 
-#define PlugInInvokeHook(hookName,dictionary) [[[PlugInManager sharedPlugInManager] registry] invokeHook:(hookName) withDictionary:(dictionary)]
+#define PlugInInvokeHook(hookName,object) [[[PlugInManager sharedPlugInManager] registry] invokeHook:(hookName) withObject:(object)]
 
 @interface PlugInManager : NSObject {
 	NSMutableArray* searchPaths;

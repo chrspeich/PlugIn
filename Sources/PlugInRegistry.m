@@ -207,7 +207,7 @@ NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 	[[hooks mutableArrayValueForKey:hookName] addObject:invocation];
 }
 
-- (void) invokeHook:(NSString*)hookName withDictionary:(NSDictionary*)dictionary
+- (void) invokeHook:(NSString*)hookName withObject:(id)object
 {
 	NSParameterAssert(hookName != Nil);
 	// dictionary is optional
@@ -228,7 +228,7 @@ NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 	while ((invocation = [enumerator nextObject])) {
 		// Ok, the target accepts arguments, the first argument will be our dictionary
 		if ([[invocation methodSignature] numberOfArguments] > 0)
-			[invocation setArgument:dictionary atIndex:0];
+			[invocation setArgument:object atIndex:0];
 		
 		// Great invoke it an catches the error...
 		@try {
@@ -242,7 +242,6 @@ NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 }
 
 @end
-
 
 @implementation PlugInRegistry (DEBUG)
 
