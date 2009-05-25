@@ -12,12 +12,14 @@
 
 extern NSString* PlugInErrorDomain;
 
-enum {
+enum _PlugInError {
 	PlugInNotFound = 1,
-	PlugInNotLoaded = 2,
-	PlugInNotRegistered = 3,
-	PlugInNotCompatible = 4
+	PlugInNotLoaded,
+	PlugInNotRegistered,
+	PlugInNotCompatible
 };
+
+typedef enum _PlugInError PlugInError;
 
 #define PlugInInvokeHook(hookName,dictionary) [[[PlugInManager sharedPlugInManager] registry] invokeHook:(hookName) withDictionary:(dictionary)]
 
