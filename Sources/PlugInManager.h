@@ -15,7 +15,7 @@ extern NSString* PlugInErrorDomain;
 enum {
 	PlugInNotFound = 1,
 	PlugInNotLoaded = 2,
-	PlugInNotRegisterd = 3,
+	PlugInNotRegistered = 3,
 	PlugInNotCompatible = 4
 };
 

@@ -169,6 +169,8 @@ static PlugInManager *sharedPlugInManager = nil;
 	Class plugInClass;
 	id plugInInstance;
 	
+	NSLog(@"DEBUG: Plugin identifier %@", [plugIn bundleIdentifier]);
+	
 	if (plugIn == Nil) {
 		error = [NSError errorWithDomain:PlugInErrorDomain 
 											 code:PlugInNotFound 
@@ -235,7 +237,7 @@ static PlugInManager *sharedPlugInManager = nil;
 		
 		if (anError != NULL) {
 			error = [NSError errorWithDomain:PlugInErrorDomain 
-										code:PlugInNotRegisterd 
+										code:PlugInNotRegistered 
 									userInfo:Nil];
 		
 			*anError = error;
