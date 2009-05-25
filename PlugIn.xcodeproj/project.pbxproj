@@ -180,7 +180,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /usr/bin/python;
-			shellScript = "import re\nimport plistlib\nfrom os.path import join\nimport os\n\np = re.compile(r'\\d*:(?P<changeset>[0-9A-Fa-f]*)$')\n\ninfo = join('/', os.environ['BUILT_PRODUCTS_DIR'], os.environ['WRAPPER_NAME'], 'Resources/Info.plist')\n\ntry:\n\n\tinfoPlist = plistlib.readPlist(info)\n\n\thgData = os.popen('/usr/local/bin/hg log -l 1 | head -n 1').read()\n\n\tprint hgData\n\n\tchangeset = p.search(hgData).group('changeset')\n\n\tprint changeset\n\n\tinfoPlist['CFBundleVersion'] = changeset\n\n\tplistlib.writePlist(infoPlist, info)\nexcept:\n\tprint \"No mercurial repo\"";
+			shellScript = "import re\nimport plistlib\nfrom os.path import join\nimport os\n\np = re.compile(r'(?P<changeset>\\d*:[0-9A-Fa-f]*)$')\n\ninfo = join('/', os.environ['BUILT_PRODUCTS_DIR'], os.environ['WRAPPER_NAME'], 'Resources/Info.plist')\n\ntry:\n\n\tinfoPlist = plistlib.readPlist(info)\n\n\thgData = os.popen('/usr/local/bin/hg log -l 1 | head -n 1').read()\n\n\tprint hgData\n\n\tchangeset = p.search(hgData).group('changeset')\n\n\tprint changeset\n\n\tinfoPlist['CFBundleVersion'] = changeset\n\n\tplistlib.writePlist(infoPlist, info)\nexcept:\n\tprint \"No mercurial repo\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
