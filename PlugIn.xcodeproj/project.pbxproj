@@ -256,6 +256,7 @@
 				GCC_PREFIX_HEADER = PlugIn_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				PRODUCT_NAME = PlugIn;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -274,6 +275,7 @@
 				GCC_PREFIX_HEADER = PlugIn_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				LD_DYLIB_INSTALL_NAME = "@executable_path/../Frameworks/$(EXECUTABLE_PATH)";
 				PRODUCT_NAME = PlugIn;
 				WRAPPER_EXTENSION = framework;
 			};
