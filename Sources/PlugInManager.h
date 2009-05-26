@@ -34,6 +34,8 @@ typedef enum _PlugInError PlugInError;
 + (PlugInManager*)sharedPlugInManager;
 
 - (NSArray*) searchPaths;
+- (void) setSearchPaths:(NSArray*)searchPaths;
+
 - (NSString*) plugInExtension;
 - (void) setPlugInExtension:(NSString*)anExtension;
 

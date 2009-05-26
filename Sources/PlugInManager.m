@@ -74,19 +74,19 @@ static PlugInManager *sharedPlugInManager = nil;
 {
 	self = [super init];
 	if (self != nil) {
-		searchPaths = [NSMutableArray new];
 		loadedPlugins = [NSMutableArray new];
 		registry = [PlugInRegistry new];
 		[self setPlugInExtension:@"plugin"];
 		
-		[[self mutableArrayValueForKey:@"searchPaths"] addObject:[[NSBundle mainBundle] builtInPlugInsPath]];
+		[self setSearchPaths:[NSArray arrayWithObject:[[NSBundle mainBundle] builtInPlugInsPath]]];
 	}
 	return self;
 }
 
 - (void) dealloc
 {
-	[searchPaths release];
+	[self setSearchPaths:Nil];
+	[self setPlugInExtension:Nil];
 	[loadedPlugins release];
 	[registry release];
 	
@@ -96,6 +96,15 @@ static PlugInManager *sharedPlugInManager = nil;
 - (NSArray*) searchPaths
 {
 	return searchPaths;
+}
+
+- (void) setSearchPaths:(NSArray*)anArray
+{
+	if ([anArray isEqualToArray:searchPaths])
+		return;
+	
+	[searchPaths release];
+	searchPaths = [anArray retain];
 }
 
 - (NSArray*) loadedPlugins
