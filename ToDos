@@ -6,3 +6,4 @@ Tasks to do for the PlugIn framework
   -> this will requierer an plugin cache which stores informations
      about all plugins that can be found in the searchpath
 - What to do if searchPath or plugInExtension?
+- Add TestCases, an TestApp and some TestPlugIns
