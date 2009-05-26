@@ -29,7 +29,8 @@ static PlugInManager *sharedPlugInManager = nil;
 @interface PlugInManager (PRIVATE)
 
 - (void) setRegistry:(PlugInRegistry*)anRegistry;
-
+- (void) setPlugInInformations:(NSMutableDictionary*)anDict;
+- (void) updatePlugInInformations;
 - (BOOL) registerPlugIn:(PlugIn*)anPlugIn;
 
 @end
@@ -92,17 +93,20 @@ static PlugInManager *sharedPlugInManager = nil;
 	self = [super init];
 	if (self != nil) {
 		loadedPlugins = [NSMutableArray new];
+		[self setPlugInInformations:[NSMutableDictionary dictionary]];
 		[self setRegistry:[PlugInRegistry new]];
 		[self setPlugInExtension:@"plugin"];
 		[self setPlugInSuperclass:[PlugIn class]];
-		
+
 		[self setSearchPaths:[NSArray arrayWithObject:[[NSBundle mainBundle] builtInPlugInsPath]]];
+		[self updatePlugInInformations];
 	}
 	return self;
 }
 
 - (void) dealloc
 {
+	[self setPlugInInformations:Nil];
 	[self setSearchPaths:Nil];
 	[self setPlugInExtension:Nil];
 	[self setRegistry:Nil];
@@ -119,6 +123,20 @@ static PlugInManager *sharedPlugInManager = nil;
 {
 	NSParameterAssert([anClass isSubclassOfClass:[PlugIn class]]);
 	plugInSuperclass = anClass;
+}
+
+- (NSDictionary*) plugInInformations
+{
+	return plugInInformations;
+}
+
+- (void) setPlugInInformations:(NSMutableDictionary*)anDict
+{
+	if ([anDict isEqualToDictionary:plugInInformations])
+		return;
+	
+	[plugInInformations release];
+	plugInInformations = [anDict retain];
 }
 
 - (NSArray*) searchPaths
@@ -184,6 +202,36 @@ static PlugInManager *sharedPlugInManager = nil;
 	}
 	
 	return YES;
+}
+
+- (bool) loadPlugInWithIdentifier:(NSString*)identifier error:(NSError*)anError
+{
+	NSParameterAssert(identifier != Nil);
+	// anError is optional
+	
+	NSMutableDictionary* info;
+	NSBundle* plugInBundle;
+	NSError* error;
+	
+	info = [plugInInformations objectForKey:identifier];
+	
+	if (!info) {
+		if (anError != NULL) {
+			error = [NSError errorWithDomain:PlugInErrorDomain 
+										code:PlugInNotFound 
+									userInfo:Nil];
+			
+			*anError = error;
+		}
+		return NO;
+	}
+	
+	if ([[info objectForKey:@"isLoaded"] boolValue]) {
+		NSLog(@"Plugin '%@' already loaded!", identifier);
+		return YES;
+	}
+	
+	plugInBundle = [NSBundle bundleWithPath:[info objectForKey:@"path"]];
 }
 
 - (bool) loadPlugIn:(NSString*)anPath error:(NSError**)anError
@@ -296,6 +344,46 @@ static PlugInManager *sharedPlugInManager = nil;
 		return NO;
 	
 	return [[self registry] registerPlugInWithInfo:registryInfo];
+}
+
+- (void) updatePlugInInformations
+{
+	NSEnumerator* searchPathEnumerator = [[self searchPaths] objectEnumerator];
+	NSString *searchPath;
+	
+	while ((searchPath = [searchPathEnumerator nextObject])) {
+		NSEnumerator *plugInPathEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:searchPath];
+		NSString *plugInPath;
+		
+		while ((plugInPath = [plugInPathEnumerator nextObject])) {
+			if ([[plugInPath pathExtension] isEqualToString:[self plugInExtension]]) {
+				// Ok this seems to be an plugin :)
+				NSMutableDictionary *dict;
+				NSString* path = [searchPath stringByAppendingPathComponent:plugInPath];
+				NSBundle* plugInBundle = [NSBundle bundleWithPath:path];
+				NSString* identifier = [plugInBundle bundleIdentifier];
+				
+				dict = [plugInInformations objectForKey:identifier];
+				
+				if (!dict) {
+					dict = [NSMutableDictionary dictionary];
+				}
+				else if ([[dict objectForKey:@"isLoaded"] boolValue]) {
+					NSLog(@"Skip updating informations for %@ because it's currently loaded", identifier);
+					continue;
+				}
+				
+				[dict setObject:@"NO" forKey:@"isLoaded"];
+				[dict setObject:path forKey:@"path"];
+				[dict setObject:[NSArray array] forKey:@"dependencies"];
+				[dict setObject:[NSNull null] forKey:@"instance"];
+				
+				[plugInInformations setObject:dict forKey:identifier];
+			}
+		}
+	}
+	
+	NSLog(@"plugins %@", plugInInformations);
 }
 
 @end
