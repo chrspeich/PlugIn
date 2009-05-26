@@ -188,7 +188,7 @@ static PlugInManager *sharedPlugInManager = nil;
 
 - (bool) loadAllPluginsError:(NSError**)anError
 {
-	NSEnumerator *searchPathEnumerator = [[self searchPaths] objectEnumerator];
+	/*NSEnumerator *searchPathEnumerator = [[self searchPaths] objectEnumerator];
 	NSString *searchPath;
 	
 	while ((searchPath = [searchPathEnumerator nextObject])) {
@@ -199,22 +199,35 @@ static PlugInManager *sharedPlugInManager = nil;
 			if ([[plugInPath pathExtension] isEqualToString:[self plugInExtension]])
 				[self loadPlugIn:[searchPath stringByAppendingPathComponent:plugInPath] error:NULL];
 		}
+	}*/
+	
+	NSEnumerator* enumerator = [plugInInformations keyEnumerator];
+	NSString* identifier;
+	
+	while ((identifier = [enumerator nextObject])) {
+		NSError* error = Nil;
+		[self loadPlugInWithIdentifier:identifier error:&error];
+		NSLog(@"error %@", error);
 	}
+	
+	NSLog(@"%@", plugInInformations);
 	
 	return YES;
 }
 
-- (bool) loadPlugInWithIdentifier:(NSString*)identifier error:(NSError*)anError
+- (bool) loadPlugInWithIdentifier:(NSString*)identifier error:(NSError**)anError
 {
 	NSParameterAssert(identifier != Nil);
 	// anError is optional
 	
 	NSMutableDictionary* info;
 	NSBundle* plugInBundle;
+	Class plugInClass;
+	id plugInInstance;
 	NSError* error;
 	
 	info = [plugInInformations objectForKey:identifier];
-	
+
 	if (!info) {
 		if (anError != NULL) {
 			error = [NSError errorWithDomain:PlugInErrorDomain 
@@ -232,6 +245,72 @@ static PlugInManager *sharedPlugInManager = nil;
 	}
 	
 	plugInBundle = [NSBundle bundleWithPath:[info objectForKey:@"path"]];
+	
+	if (![plugInBundle isLoaded] && ![plugInBundle load]) {
+		if (anError != NULL) {
+			error = [NSError errorWithDomain:PlugInErrorDomain 
+										code:PlugInNotLoaded 
+									userInfo:Nil];
+			
+			*anError = error;
+		}
+		return NO;
+	}
+	
+	plugInClass = [plugInBundle principalClass];
+	
+	if (!plugInClass) {
+		if (anError != NULL) {
+			error = [NSError errorWithDomain:PlugInErrorDomain 
+										code:PlugInNotLoaded 
+									userInfo:Nil];
+			
+			*anError = error;
+		}
+		return NO;
+	}
+	
+	if (![plugInClass isSubclassOfClass:[self plugInSuperclass]]) {
+		if (anError != NULL) {
+			error = [NSError errorWithDomain:PlugInErrorDomain 
+										code:PlugInNotCompatible 
+									userInfo:Nil];
+			
+			*anError = error;
+		}
+		return NO;
+	}
+	
+	
+	plugInInstance = [[plugInClass alloc] init];
+	
+	if (![plugInInstance setupError:&error]) {
+		[plugInInstance release];
+		
+		if (anError != NULL)
+			*anError = error;
+		
+		return NO;
+	}
+	
+	if (![self registerPlugIn:plugInInstance]) {
+		[plugInInstance release];
+		
+		if (anError != NULL) {
+			error = [NSError errorWithDomain:PlugInErrorDomain 
+										code:PlugInNotRegistered 
+									userInfo:Nil];
+			
+			*anError = error;
+		}
+		
+		return NO;
+	}
+	
+	[info setObject:plugInInstance forKey:@"instance"];
+	[info setObject:@"YES" forKey:@"isLoaded"];
+	
+	return YES;
 }
 
 - (bool) loadPlugIn:(NSString*)anPath error:(NSError**)anError

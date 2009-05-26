@@ -59,7 +59,7 @@ typedef enum _PlugInError PlugInError;
 - (NSString*) plugInExtension;
 - (void) setPlugInExtension:(NSString*)anExtension;
 
-- (bool) loadPlugInWithIdentifier:(NSString*)identifier error:(NSError*)anError;
+- (bool) loadPlugInWithIdentifier:(NSString*)identifier error:(NSError**)anError;
 - (bool) loadPlugIn:(NSString*)anPath error:(NSError**)anError;
 - (bool) loadAllPluginsError:(NSError**)anError;
 
