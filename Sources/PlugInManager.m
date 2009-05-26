@@ -77,6 +77,7 @@ static PlugInManager *sharedPlugInManager = nil;
 		searchPaths = [NSMutableArray new];
 		loadedPlugins = [NSMutableArray new];
 		registry = [PlugInRegistry new];
+		[self setPlugInExtension:@"plugin"];
 		
 		[[self mutableArrayValueForKey:@"searchPaths"] addObject:[[NSBundle mainBundle] builtInPlugInsPath]];
 	}
@@ -107,6 +108,20 @@ static PlugInManager *sharedPlugInManager = nil;
 	return registry;
 }
 
+- (NSString*) plugInExtension
+{
+	return plugInExtension;
+}
+
+- (void) setPlugInExtension:(NSString*)anExtension
+{
+	if ([anExtension isEqualToString:plugInExtension])
+		return;
+	
+	[plugInExtension release];
+	plugInExtension = [anExtension retain];
+}
+
 - (bool) loadAllPluginsError:(NSError**)anError
 {
 	NSEnumerator *searchPathEnumerator = [[self searchPaths] objectEnumerator];
@@ -117,7 +132,7 @@ static PlugInManager *sharedPlugInManager = nil;
 		NSString *plugInPath;
 		
 		while ((plugInPath = [plugInPathEnumerator nextObject])) {
-			if ([[plugInPath pathExtension] isEqualToString:@"plugin"])
+			if ([[plugInPath pathExtension] isEqualToString:[self plugInExtension]])
 				[self loadPlugIn:[searchPath stringByAppendingPathComponent:plugInPath] error:NULL];
 		}
 	}

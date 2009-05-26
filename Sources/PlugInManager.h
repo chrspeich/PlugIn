@@ -27,11 +27,15 @@ typedef enum _PlugInError PlugInError;
 	NSMutableArray* searchPaths;
 	NSMutableArray* loadedPlugins;
 	PlugInRegistry* registry;
+	
+	NSString*		plugInExtension;
 }
 
 + (PlugInManager*)sharedPlugInManager;
 
 - (NSArray*) searchPaths;
+- (NSString*) plugInExtension;
+- (void) setPlugInExtension:(NSString*)anExtension;
 
 - (bool) loadPlugIn:(NSString*)anPath error:(NSError**)anError;
 - (bool) loadPlugInNamed:(NSString*)plugInName error:(NSError**)anError;
