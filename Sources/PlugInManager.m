@@ -13,6 +13,8 @@ static PlugInManager *sharedPlugInManager = nil;
 
 @interface PlugInManager (PRIVATE)
 
+- (void) setRegistry:(PlugInRegistry*)anRegistry;
+
 - (BOOL) registerPlugIn:(PlugIn*)anPlugIn;
 
 @end
@@ -75,7 +77,7 @@ static PlugInManager *sharedPlugInManager = nil;
 	self = [super init];
 	if (self != nil) {
 		loadedPlugins = [NSMutableArray new];
-		registry = [PlugInRegistry new];
+		[self setRegistry:[PlugInRegistry new]];
 		[self setPlugInExtension:@"plugin"];
 		
 		[self setSearchPaths:[NSArray arrayWithObject:[[NSBundle mainBundle] builtInPlugInsPath]]];
@@ -87,8 +89,8 @@ static PlugInManager *sharedPlugInManager = nil;
 {
 	[self setSearchPaths:Nil];
 	[self setPlugInExtension:Nil];
+	[self setRegistry:Nil];
 	[loadedPlugins release];
-	[registry release];
 	
 	[super dealloc];
 }
@@ -115,6 +117,15 @@ static PlugInManager *sharedPlugInManager = nil;
 - (PlugInRegistry*) registry
 {
 	return registry;
+}
+
+- (void) setRegistry:(PlugInRegistry*)anRegistry
+{
+	if ([anRegistry isEqualTo:registry])
+		return;
+	
+	[registry release];
+	registry = [anRegistry retain];
 }
 
 - (NSString*) plugInExtension
@@ -258,7 +269,7 @@ static PlugInManager *sharedPlugInManager = nil;
 	if (!registryInfo)
 		return NO;
 	
-	return [registry registerPlugInWithInfo:registryInfo];
+	return [[self registry] registerPlugInWithInfo:registryInfo];
 }
 
 @end
