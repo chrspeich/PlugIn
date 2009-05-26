@@ -188,26 +188,12 @@ static PlugInManager *sharedPlugInManager = nil;
 
 - (bool) loadAllPluginsError:(NSError**)anError
 {
-	/*NSEnumerator *searchPathEnumerator = [[self searchPaths] objectEnumerator];
-	NSString *searchPath;
-	
-	while ((searchPath = [searchPathEnumerator nextObject])) {
-		NSEnumerator *plugInPathEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:searchPath];
-		NSString *plugInPath;
-		
-		while ((plugInPath = [plugInPathEnumerator nextObject])) {
-			if ([[plugInPath pathExtension] isEqualToString:[self plugInExtension]])
-				[self loadPlugIn:[searchPath stringByAppendingPathComponent:plugInPath] error:NULL];
-		}
-	}*/
-	
 	NSEnumerator* enumerator = [plugInInformations keyEnumerator];
 	NSString* identifier;
 	
 	while ((identifier = [enumerator nextObject])) {
 		NSError* error = Nil;
 		[self loadPlugInWithIdentifier:identifier error:&error];
-		NSLog(@"error %@", error);
 	}
 	
 	NSLog(@"%@", plugInInformations);
