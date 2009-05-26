@@ -33,6 +33,9 @@
 		92952BEC0FCB3F0B00F3D16C /* PlugInPriorityProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugInPriorityProtocol.h; sourceTree = "<group>"; };
 		92952BED0FCB3F0B00F3D16C /* PlugInRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugInRegistry.h; sourceTree = "<group>"; };
 		92952BEE0FCB3F0B00F3D16C /* PlugInRegistry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlugInRegistry.m; sourceTree = "<group>"; };
+		92CE009D0FCBF42D008AB1E4 /* ToDos */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ToDos; sourceTree = "<group>"; };
+		92CE00A50FCBF89C008AB1E4 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
+		92CE00A60FCBF8C0008AB1E4 /* COPYING.LESSER */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING.LESSER; sourceTree = "<group>"; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -64,6 +67,9 @@
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
+				92CE009D0FCBF42D008AB1E4 /* ToDos */,
+				92CE00A50FCBF89C008AB1E4 /* COPYING */,
+				92CE00A60FCBF8C0008AB1E4 /* COPYING.LESSER */,
 			);
 			name = PlugIn;
 			sourceTree = "<group>";
