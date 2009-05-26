@@ -1,0 +1,8 @@
+Tasks to do for the PlugIn framework
+=====================================
+
+- support loading with plugin identifiers
+- add depencitys
+  -> this will requierer an plugin cache which stores informations
+     about all plugins that can be found in the searchpath
+- What to do if searchPath or plugInExtension?
