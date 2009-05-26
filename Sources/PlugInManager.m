@@ -22,7 +22,8 @@
 
 #import "PlugIn.h"
 
-NSString* PlugInErrorDomain = @"org.apachefriends.xampp.control.plugin";
+NSString* PlugInErrorDomain = @"de.kleinweby.plugin";
+
 static PlugInManager *sharedPlugInManager = nil;
 
 @interface PlugInManager (PRIVATE)
