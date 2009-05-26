@@ -94,6 +94,7 @@ static PlugInManager *sharedPlugInManager = nil;
 		loadedPlugins = [NSMutableArray new];
 		[self setRegistry:[PlugInRegistry new]];
 		[self setPlugInExtension:@"plugin"];
+		[self setPlugInSuperclass:[PlugIn class]];
 		
 		[self setSearchPaths:[NSArray arrayWithObject:[[NSBundle mainBundle] builtInPlugInsPath]]];
 	}
@@ -108,6 +109,16 @@ static PlugInManager *sharedPlugInManager = nil;
 	[loadedPlugins release];
 	
 	[super dealloc];
+}
+
+- (Class) plugInSuperclass
+{
+	return plugInSuperclass;
+}
+- (void) setPlugInSuperclass:(Class)anClass
+{
+	NSParameterAssert([anClass isSubclassOfClass:[PlugIn class]]);
+	plugInSuperclass = anClass;
 }
 
 - (NSArray*) searchPaths
@@ -227,7 +238,7 @@ static PlugInManager *sharedPlugInManager = nil;
 		return NO;
 	}
 		
-	if (![plugInClass isSubclassOfClass:[PlugIn class]]) {
+	if (![plugInClass isSubclassOfClass:[self plugInSuperclass]]) {
 		if (anError != NULL) {
 			error = [NSError errorWithDomain:PlugInErrorDomain 
 										code:PlugInNotCompatible 

@@ -41,11 +41,15 @@ typedef enum _PlugInError PlugInError;
 	NSMutableArray* searchPaths;
 	NSMutableArray* loadedPlugins;
 	PlugInRegistry* registry;
+	Class			plugInSuperclass;
 	
 	NSString*		plugInExtension;
 }
 
 + (PlugInManager*)sharedPlugInManager;
+
+- (Class) plugInSuperclass;
+- (void) setPlugInSuperclass:(Class)anClass;
 
 - (NSArray*) searchPaths;
 - (void) setSearchPaths:(NSArray*)searchPaths;
