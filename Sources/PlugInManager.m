@@ -125,38 +125,6 @@ static PlugInManager *sharedPlugInManager = nil;
 	return YES;
 }
 
-- (bool) loadPlugInNamed:(NSString*)plugInName error:(NSError**)anError
-{
-	NSParameterAssert(plugInName != Nil);
-	// anError is optional
-	
-	NSEnumerator *pathEnumerator = [[self searchPaths] objectEnumerator];
-	NSString *path;
-	
-	while ((path = [pathEnumerator nextObject])) {
-		NSString *plugInPath = [[path stringByAppendingPathComponent:plugInName] stringByAppendingPathExtension:@"plugin"];
-		BOOL isDirectory;
-		
-		if ([[NSFileManager defaultManager] fileExistsAtPath:plugInPath 
-												 isDirectory:&isDirectory] 
-			&& isDirectory) {
-			// We've found a Plugin with the Name return here...
-			return [self loadPlugIn:plugInPath error:anError];
-		}
-	}
-	
-	// There is no plugIn with this Name!
-	if (anError != NULL) {
-		NSError *error = [NSError errorWithDomain:PlugInErrorDomain 
-											 code:PlugInNotFound 
-										 userInfo:Nil];
-		
-		*anError = error;
-	}
-	
-	return NO;
-}
-
 - (bool) loadPlugIn:(NSString*)anPath error:(NSError**)anError
 {
 	NSParameterAssert(anPath != Nil);
