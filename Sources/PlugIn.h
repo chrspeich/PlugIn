@@ -27,7 +27,7 @@
 #import <PlugIn/PlugInPriorityProtocol.h>
 
 @interface PlugIn : NSObject {
-	NSDictionary *registryInfo;
+	NSDictionary *_registryInfo;
 }
 
 - (BOOL) setupError:(NSError**)anError;

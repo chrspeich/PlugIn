@@ -46,20 +46,20 @@
 
 - (void) setRegistryInfo:(NSDictionary*)anDictionary
 {
-	if ([anDictionary isEqualToDictionary:registryInfo])
+	if ([anDictionary isEqualToDictionary:_registryInfo])
 		return;
 	
 	[self willChangeValueForKey:@"registryInfo"];
 	
-	[registryInfo release];
-	registryInfo = [anDictionary retain];
+	[_registryInfo release];
+	_registryInfo = [anDictionary retain];
 	
 	[self didChangeValueForKey:@"registryInfo"];
 }
 
 - (NSDictionary*) registryInfo
 {
-	return registryInfo;
+	return _registryInfo;
 }
 
 @end
