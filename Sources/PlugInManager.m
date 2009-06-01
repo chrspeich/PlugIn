@@ -26,6 +26,11 @@ NSString* PlugInErrorDomain = @"de.kleinweby.plugin";
 
 static PlugInManager *sharedPlugInManager = nil;
 
+void PlugInInvokeHook(NSString* hookName, id object)
+{
+	[[[PlugInManager sharedPlugInManager] registry] invokeHook:hookName withObject:object];
+}
+
 @interface PlugInManager (PRIVATE)
 
 - (void) setRegistry:(PlugInRegistry*)anRegistry;
