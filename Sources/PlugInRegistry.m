@@ -242,7 +242,7 @@ NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 	while ((invocation = [enumerator nextObject])) {
 		// Ok, the target accepts arguments, the first argument will be our dictionary
 		if ([[invocation methodSignature] numberOfArguments] > 0)
-			[invocation setArgument:object atIndex:2];
+			[invocation setArgument:&object atIndex:2];
 		
 		// Great invoke it an catches the error...
 		@try {
