@@ -191,18 +191,46 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	plugInExtension = [anExtension retain];
 }
 
-- (bool) loadAllPluginsError:(NSError**)anError
+- (bool) loadAllPluginsError:(NSError**)anErrorOrNull
 {
-	NSEnumerator* enumerator = [plugInInformations keyEnumerator];
+//  TODO: When anErrorOrNull is Null, all plugins should \
+//	loaded with error:Null so that, they do not the 
+//	unneccesary task of creating an NSError object
+	
+	NSEnumerator* enumerator;
 	NSString* identifier;
+	NSMutableArray* collectedErrors;
+	
+	enumerator = [plugInInformations keyEnumerator];
+	collectedErrors = [NSMutableArray new];
 	
 	while ((identifier = [enumerator nextObject])) {
 		NSError* error = Nil;
+		
 		[self loadPlugInWithIdentifier:identifier error:&error];
+		
+		if (error) {
+			[collectedErrors addObject:error];
+		}
 	}
 	
-	NSLog(@"%@", plugInInformations);
-	
+	if ([collectedErrors count] > 0) {
+		if (anErrorOrNull != NULL) {
+			NSError* error;
+			
+			error = [NSError errorWithDomain:PlugInErrorDomain 
+										code:PlugInNotAllLoaded 
+									userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+											  collectedErrors,kCollectedErrorsKey,Nil]];
+			
+			*anErrorOrNull = error;
+		}
+		
+		[collectedErrors release];
+		return NO;
+	}
+
+	[collectedErrors release];
 	return YES;
 }
 

@@ -40,7 +40,7 @@
 	if (anError != NULL) {
 		*anError = [NSError errorWithDomain:@"" code:1 userInfo:Nil];
 	}
-	
+
 	return NO;
 }
 

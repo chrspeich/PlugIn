@@ -26,18 +26,19 @@
 
 extern NSString* PlugInErrorDomain;
 
+#define kCollectedErrorsKey (@"CollectedErrors")
+
 enum _PlugInError {
 	PlugInNotFound = 1,
 	PlugInNotLoaded,
 	PlugInNotRegistered,
-	PlugInNotCompatible
+	PlugInNotCompatible,
+	PlugInNotAllLoaded
 };
 
 typedef enum _PlugInError PlugInError;
 
 void PlugInInvokeHook(NSString* hookName, id object);
-
-//#define PlugInInvokeHook(hookName,object) [[[PlugInManager sharedPlugInManager] registry] invokeHook:(hookName) withObject:(object)]
 
 @interface PlugInManager : NSObject {
 	NSMutableArray* searchPaths;
