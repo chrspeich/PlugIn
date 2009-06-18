@@ -22,15 +22,7 @@
 
 #import "PILog.h"
 
-#ifndef DefaultLogLevel
-# ifdef DEBUG
-#  define DefaultLogLevel PIMaxLogLevel
-# else
-#  define DefaultLogLevel PIWarnLogLevel
-# endif /* DEBUG */
-#endif /* DefaultLogLevel */
-
-PILogLevel maxShownLogLevel = DefaultLogLevel;
+PILogLevel maxShownLogLevel = PIMaxLogLevel;
 
 void PIDefaultLogMessageDriver(PILogLevel level, NSString* message);
 

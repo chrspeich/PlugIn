@@ -241,6 +241,8 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	
 	info = [plugInInformations objectForKey:identifier];
 
+	PINoticeLog(@"Load '%@'...", identifier);
+	
 	if (!info) {
 		if (anError != NULL) {
 			error = [NSError errorWithDomain:PlugInErrorDomain 
@@ -253,8 +255,12 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	}
 	
 	if ([[info objectForKey:@"isLoaded"] boolValue]) {
-		PINoticeLog(@"Plugin '%@' already loaded!", identifier);
+		PINoticeLog(@"PlugIn '%@' already loaded!", identifier);
 		return YES;
+	}
+	
+	if ([[info objectForKey:@"dependencies"] count] > 0) {
+		PIDebugLog(@"Calculating depencies for '%@'...", identifier);
 	}
 	
 	plugInBundle = [NSBundle bundleWithPath:[info objectForKey:@"path"]];
@@ -322,6 +328,8 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	
 	[info setObject:plugInInstance forKey:@"instance"];
 	[info setObject:@"YES" forKey:@"isLoaded"];
+	
+	PINoticeLog(@"PlugIn '%@' loaded...", identifier);
 	
 	return YES;
 }
