@@ -20,7 +20,7 @@
  
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 #import <PlugIn/PlugInManager.h>
 #import <PlugIn/PlugInRegistry.h>

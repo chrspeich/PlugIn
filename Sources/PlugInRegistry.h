@@ -20,7 +20,7 @@
  
  */
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 @interface PlugInRegistry : NSObject {
 	NSMutableDictionary	*plugInCategories;
