@@ -44,7 +44,6 @@ void PlugInInvokeHook(NSString* hookName, id object);
 	NSMutableArray* searchPaths;
 	NSMutableDictionary* plugInInformations;
 	
-	NSMutableArray* loadedPlugins;
 	PlugInRegistry* registry;
 	Class			plugInSuperclass;
 	
@@ -65,7 +64,6 @@ void PlugInInvokeHook(NSString* hookName, id object);
 - (bool) loadPlugInWithIdentifier:(NSString*)identifier error:(NSError**)anError;
 - (bool) loadAllPluginsError:(NSError**)anError;
 
-- (NSArray*) loadedPlugins;
 - (NSDictionary*) plugInInformations;
 - (PlugInRegistry*) registry;
 

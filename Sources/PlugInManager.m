@@ -97,7 +97,6 @@ void PlugInInvokeHook(NSString* hookName, id object)
 {
 	self = [super init];
 	if (self != nil) {
-		loadedPlugins = [NSMutableArray new];
 		[self setPlugInInformations:[NSMutableDictionary dictionary]];
 		[self setRegistry:[PlugInRegistry new]];
 		[self setPlugInExtension:@"plugin"];
@@ -115,7 +114,6 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	[self setSearchPaths:Nil];
 	[self setPlugInExtension:Nil];
 	[self setRegistry:Nil];
-	[loadedPlugins release];
 	
 	[super dealloc];
 }
@@ -156,11 +154,6 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	
 	[searchPaths release];
 	searchPaths = [anArray retain];
-}
-
-- (NSArray*) loadedPlugins
-{
-	return loadedPlugins;
 }
 
 - (PlugInRegistry*) registry
