@@ -21,6 +21,7 @@
  */
 
 #import "PlugIn.h"
+#import "PILog.h"
 
 NSString* PlugInErrorDomain = @"de.kleinweby.plugin";
 
@@ -252,7 +253,7 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	}
 	
 	if ([[info objectForKey:@"isLoaded"] boolValue]) {
-		NSLog(@"Plugin '%@' already loaded!", identifier);
+		PINoticeLog(@"Plugin '%@' already loaded!", identifier);
 		return YES;
 	}
 	
@@ -344,6 +345,8 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	NSEnumerator* searchPathEnumerator = [[self searchPaths] objectEnumerator];
 	NSString *searchPath;
 	
+	PIDebugLog(@"Begin updatePlugInInformations...");
+	
 	while ((searchPath = [searchPathEnumerator nextObject])) {
 		NSEnumerator *plugInPathEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:searchPath];
 		NSString *plugInPath;
@@ -356,13 +359,15 @@ void PlugInInvokeHook(NSString* hookName, id object)
 				NSBundle* plugInBundle = [NSBundle bundleWithPath:path];
 				NSString* identifier = [plugInBundle bundleIdentifier];
 				
+				PIDebugLog(@"Update informations for '%@'...", identifier);
+				
 				dict = [plugInInformations objectForKey:identifier];
 				
 				if (!dict) {
 					dict = [NSMutableDictionary dictionary];
 				}
 				else if ([[dict objectForKey:@"isLoaded"] boolValue]) {
-					NSLog(@"Skip updating informations for %@ because it's currently loaded", identifier);
+					PIWarnLog(@"Skip updating informations for %@ because it's currently loaded", identifier);
 					continue;
 				}
 				
@@ -376,7 +381,8 @@ void PlugInInvokeHook(NSString* hookName, id object)
 		}
 	}
 	
-	NSLog(@"plugins %@", plugInInformations);
+	PIDebugLog(@"Updated plugInInformations: %@", plugInInformations);
+	PIDebugLog(@"End updatePlugInInformations...");
 }
 
 @end

@@ -23,6 +23,8 @@
 #import "PlugInRegistry.h"
 #import "PlugInPriorityProtocol.h"
 
+#import "PILog.h"
+
 NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 {
 	int firstPriority = 0;
@@ -84,7 +86,7 @@ NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 
 	// We have already this Categorie in our Registry
 	if ([plugInCategories valueForKey:anCategorie]) {
-		NSLog(@"DEBUG: %@ already in this Registry.");
+		PIDebugLog(@"%@ already in this Registry.");
 		return;
 	}
 	
@@ -233,7 +235,7 @@ NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 	invocations = [hooks valueForKey:hookName];
 	
 	if (!invocations || ![invocations count]) {
-		NSLog(@"DEBUG: No hooks for '%@'", hookName);
+		PINoticeLog(@"No hooks for '%@'", hookName);
 		return;
 	}
 	
@@ -246,11 +248,11 @@ NSComparisonResult sortCategorie(id firstObject, id secondObject, void *context)
 		
 		// Great invoke it an catches the error...
 		@try {
-			NSLog(@"DEBUG: Invoke hook '%@' on %@", hookName, invocation);
+			PIDebugLog(@"Invoke hook '%@' on %@", hookName, invocation);
 			[invocation invoke];
 		}
 		@catch (NSException * e) {
-			NSLog(@"ERROR: Hook '%@' failed on %@: %@", hookName, invocation, e);
+			PIErrorLog(@"Hook '%@' failed on %@: %@", hookName, invocation, e);
 		}
 	}
 }

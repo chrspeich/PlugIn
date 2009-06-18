@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
-		9259DF900FEAA38300878C6A /* PILog.h in Headers */ = {isa = PBXBuildFile; fileRef = 9259DF8E0FEAA38300878C6A /* PILog.h */; };
+		9259DF900FEAA38300878C6A /* PILog.h in Headers */ = {isa = PBXBuildFile; fileRef = 9259DF8E0FEAA38300878C6A /* PILog.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9259DF910FEAA38300878C6A /* PILog.m in Sources */ = {isa = PBXBuildFile; fileRef = 9259DF8F0FEAA38300878C6A /* PILog.m */; };
 		9259DF980FEAA40500878C6A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9259DF970FEAA40500878C6A /* Foundation.framework */; };
 		92952BEF0FCB3F0B00F3D16C /* PlugIn.h in Headers */ = {isa = PBXBuildFile; fileRef = 92952BE80FCB3F0B00F3D16C /* PlugIn.h */; settings = {ATTRIBUTES = (Public, ); }; };
