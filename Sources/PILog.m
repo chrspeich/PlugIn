@@ -22,7 +22,7 @@
 
 #import "PILog.h"
 
-PILogLevel maxShownLogLevel = PIMaxLogLevel;
+PILogLevel maxShownLogLevel = PINoticeLogLevel;
 
 void PIDefaultLogMessageDriver(PILogLevel level, NSString* message);
 
