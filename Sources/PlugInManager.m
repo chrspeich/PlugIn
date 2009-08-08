@@ -24,6 +24,10 @@
 #import "PILog.h"
 
 NSString* PlugInErrorDomain = @"de.kleinweby.plugin";
+NSString* PIPlugInDependenciesKey = @"PIPlugInDependencies";
+NSString* PIPlugInPathKey = @"PIPlugInPath";
+NSString* PIPlugInInstanceKey = @"PIPlugInInstance";
+NSString* PIPlugInIsLoadedKey = @"PIPlugInIsLoaded";
 
 static PlugInManager *sharedPlugInManager = nil;
 
@@ -99,7 +103,7 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	self = [super init];
 	if (self != nil) {
 		[self setPlugInInformations:[NSMutableDictionary dictionary]];
-		[self setRegistry:[PlugInRegistry new]];
+		[self setRegistry:[[PlugInRegistry new] autorelease]];
 		[self setPlugInExtension:@"plugin"];
 		[self setPlugInSuperclass:[PlugIn class]];
 
@@ -254,16 +258,16 @@ void PlugInInvokeHook(NSString* hookName, id object)
 		return NO;
 	}
 	
-	if ([[info objectForKey:@"isLoaded"] boolValue]) {
+	if ([[info objectForKey:PIPlugInIsLoadedKey] boolValue]) {
 		PINoticeLog(@"PlugIn '%@' already loaded!", identifier);
 		return YES;
 	}
 	
-	if ([[info objectForKey:@"dependencies"] count] > 0) {
+	if ([[info objectForKey:PIPlugInDependenciesKey] count] > 0) {
 		PIDebugLog(@"Calculating depencies for '%@'...", identifier);
 	}
 	
-	plugInBundle = [NSBundle bundleWithPath:[info objectForKey:@"path"]];
+	plugInBundle = [NSBundle bundleWithPath:[info objectForKey:PIPlugInPathKey]];
 	
 	if (![plugInBundle isLoaded] && ![plugInBundle load]) {
 		if (anError != NULL) {
@@ -326,8 +330,8 @@ void PlugInInvokeHook(NSString* hookName, id object)
 		return NO;
 	}
 	
-	[info setObject:plugInInstance forKey:@"instance"];
-	[info setObject:@"YES" forKey:@"isLoaded"];
+	[info setObject:plugInInstance forKey:PIPlugInInstanceKey];
+	[info setObject:@"YES" forKey:PIPlugInIsLoadedKey];
 	
 	PINoticeLog(@"PlugIn '%@' loaded...", identifier);
 	
@@ -348,12 +352,30 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	return [[self registry] registerPlugInWithInfo:registryInfo];
 }
 
+/*
+ 
+ This will search in the searchPaths for PlugIns and will update
+ the internal PlugIn "Database" where are avaiable PlugIns are listed.
+ This is needed to identify PlugIns via an unique identifier rather
+ than the path of it. This also makes it simplier to have multipiple
+ searchPaths.
+ 
+ NOTE: Informations for PlugIns that are loaded will be not updated
+ to ensure that the informations matches the PlugIn that is loaded
+ and not another one.
+ 
+ NOTE: If two PlugIns with the same identifier are found, the one 
+ with the CFBundleVersion value will be used. If they're equal, 
+ the behavior is undefined!
+ 
+ */
+
 - (void) updatePlugInInformations
 {
 	NSEnumerator* searchPathEnumerator = [[self searchPaths] objectEnumerator];
 	NSString *searchPath;
 	
-	PIDebugLog(@"Begin updatePlugInInformations...");
+	PITraceLog(@"Begin updatePlugInInformations...");
 	
 	while ((searchPath = [searchPathEnumerator nextObject])) {
 		NSEnumerator *plugInPathEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:searchPath];
@@ -361,7 +383,11 @@ void PlugInInvokeHook(NSString* hookName, id object)
 		
 		while ((plugInPath = [plugInPathEnumerator nextObject])) {
 			if ([[plugInPath pathExtension] isEqualToString:[self plugInExtension]]) {
-				// Ok this seems to be an plugin :)
+				/*
+				 This PlugIn seems to be one that can be used with this app. Further
+				 tests will be performed when the PlugIn gets loaded.
+				 */
+				
 				NSMutableDictionary *dict;
 				NSString* path = [searchPath stringByAppendingPathComponent:plugInPath];
 				NSBundle* plugInBundle = [NSBundle bundleWithPath:path];
@@ -369,20 +395,83 @@ void PlugInInvokeHook(NSString* hookName, id object)
 				
 				PIDebugLog(@"Update informations for '%@'...", identifier);
 				
+				// First look if this PlugIn is already known
 				dict = [plugInInformations objectForKey:identifier];
 				
 				if (!dict) {
+					// This PlugIn is not known, create an dictionary for it
 					dict = [NSMutableDictionary dictionary];
 				}
 				else if ([[dict objectForKey:@"isLoaded"] boolValue]) {
-					PIWarnLog(@"Skip updating informations for %@ because it's currently loaded", identifier);
+					// This PlugIn (or at lease one with the same identifier) is
+					// already loaded. The informations will not be updated to 
+					// ensure that they are matches with the loaded PlugIn.
+					
+					PIWarnLog(@"Skip updating informations for '%@' because it's currently loaded", identifier);
 					continue;
 				}
+				else if (![path isEqualToString:[dict objectForKey:PIPlugInPathKey]]) {
+					// We have already an PlugIn with this identifier in our
+					// database but with an different path. Let us look which
+					// is newer.
+					
+					NSString* knownPlugInVersionsNumber;
+					NSString* otherPlugInVersionsNumber;
+					
+					knownPlugInVersionsNumber = [[NSBundle bundleWithPath:[dict objectForKey:PIPlugInPathKey]]
+												 objectForInfoDictionaryKey:@"CFBundleVersion"];
+					otherPlugInVersionsNumber = [plugInBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+					
+					NSComparisonResult result = [otherPlugInVersionsNumber compare:knownPlugInVersionsNumber];
+					
+					if (result == NSOrderedAscending) {
+						// The PlugIn that is already known is newer. Skip this
+						// PlugIn.
+						
+						PIDebugLog(@"Use the PlugIn at '%@' because is it newer than the on at '%@'.", 
+								   [dict objectForKey:PIPlugInPathKey], plugInPath);
+						continue;
+					}
+					else if (result == NSOrderedSame) {
+						// The PlugIns have the same version. This situation
+						// is undefined.
+						
+						PIWarnLog(@"The PlugIns '%@' and '%@' are of the same version! Which one is used is undefined!",
+								  plugInPath, [dict objectForKey:PIPlugInPathKey]);
+						
+						// Continue here to save some cpu cycles ;)
+						continue;
+					}
+					else {
+						// The PlugIn that we currently found is newer than that
+						// we already know of.
+						
+						PIDebugLog(@"Use the PlugIn at '%@' because is it newer than the on at '%@'.", 
+								   plugInPath, [dict objectForKey:PIPlugInPathKey]);
+					}
+				}
 				
-				[dict setObject:@"NO" forKey:@"isLoaded"];
-				[dict setObject:path forKey:@"path"];
-				[dict setObject:[NSArray array] forKey:@"dependencies"];
-				[dict setObject:[NSNull null] forKey:@"instance"];
+				// The PlugIn is not loaded because, if it where loaded
+				// before this code were skipped and we didn't load it (yet).
+				[dict setObject:@"NO" forKey:PIPlugInIsLoadedKey];
+				
+				// Because of that, there is no instace of the PlugIn.
+				[dict setObject:[NSNull null] forKey:PIPlugInInstanceKey];
+				
+				// Save the path of the PlugIn for later use.
+				[dict setObject:path forKey:PIPlugInPathKey];
+				
+				// Get the dependencies of the PlugIn and save it
+				// for later use.
+				NSArray* dependencies = [plugInBundle objectForInfoDictionaryKey:PIPlugInDependenciesKey];
+				
+				if (!dependencies) {
+					// This PlugIn have no dependencies so use an
+					// empty array for this.
+					dependencies = [NSArray array];
+				}
+				[dict setObject:dependencies forKey:PIPlugInDependenciesKey];
+
 				
 				[plugInInformations setObject:dict forKey:identifier];
 			}
@@ -390,7 +479,7 @@ void PlugInInvokeHook(NSString* hookName, id object)
 	}
 	
 	PIDebugLog(@"Updated plugInInformations: %@", plugInInformations);
-	PIDebugLog(@"End updatePlugInInformations...");
+	PITraceLog(@"End updatePlugInInformations...");
 }
 
 @end

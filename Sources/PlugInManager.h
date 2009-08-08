@@ -28,6 +28,15 @@ extern NSString* PlugInErrorDomain;
 
 #define kCollectedErrorsKey (@"CollectedErrors")
 
+// The dependencies of an PlugIn.
+extern NSString* PIPlugInDependenciesKey;
+// The path of an PlugIn.
+extern NSString* PIPlugInPathKey;
+// The instance of an PlugIn.
+extern NSString* PIPlugInInstanceKey;
+// If the PlugIn is loaded.
+extern NSString* PIPlugInIsLoadedKey;
+
 enum _PlugInError {
 	PlugInNotFound = 1,
 	PlugInNotLoaded,

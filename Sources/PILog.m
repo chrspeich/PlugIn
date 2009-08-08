@@ -53,6 +53,20 @@ void PILogv(PILogLevel level, NSString* format, va_list args)
 	[message release];
 }
 
+#ifdef PI_HAVE_TRACELOG
+void PITraceLog(NSString* format, ...)
+{
+	va_list args;
+	
+	va_start(args, format);
+	
+	PILogv(PITraceLogLevel, format, args);
+	
+	va_end(args);
+}
+#endif
+
+#ifdef PI_HAVE_DEBUGLOG
 void PIDebugLog(NSString* format, ...)
 {
 	va_list args;
@@ -63,6 +77,7 @@ void PIDebugLog(NSString* format, ...)
 	
 	va_end(args);
 }
+#endif
 
 void PINoticeLog(NSString* format, ...)
 {
@@ -123,6 +138,9 @@ void PIDefaultLogMessageDriver(PILogLevel level, NSString* message)
 			break;
 		case PIDebugLogLevel:
 			prefix = @"[DEBUG]";
+			break;
+		case PIDebugLogLevel:
+			prefix = @"[TRACE]";
 			break;
 		default:
 			prefix = @"";

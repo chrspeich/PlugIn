@@ -22,12 +22,26 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define PI_HAVE_DEBUGLOG
+#define PI_HAVE_TRACELOG
+
+// Make sure that TraceLog is not avaiable
+// when DebugLog isn't.
+#ifndef PI_HAVE_DEBUGLOG
+# undef PI_HAVE_TRACELOG
+#endif
+
 enum _PILogLevel {
 	PIErrorLogLevel = 1,
-	PIWarnLogLevel,
-	PINoticeLogLevel,
-	PIDebugLogLevel,
-	PIMaxLogLevel = 200
+	PIWarnLogLevel = 2,
+	PINoticeLogLevel = 3,
+#ifdef PI_HAVE_DEBUGLOG
+	PIDebugLogLevel = 4,
+#endif
+#ifdef PI_HAVE_TRACELOG
+	PITraceLogLevel = 5,
+#endif
+	PIMaxLogLevel = UINT_MAX
 };
 
 typedef enum _PILogLevel PILogLevel;
@@ -35,7 +49,18 @@ typedef enum _PILogLevel PILogLevel;
 void PILog(PILogLevel level, NSString* format, ...);
 void PILogv(PILogLevel level, NSString* format, va_list args);
 
+#ifdef PI_HAVE_TRACELOG
+void PITraceLog(NSString* format, ...);
+#else
+#define PITraceLog(format,...)
+#endif
+
+#ifdef PI_HAVE_DEBUGLOG
 void PIDebugLog(NSString* format, ...);
+#else
+#define PIDebugLog(format,...)
+#endif
+
 void PIWarnLog(NSString* format, ...);
 void PINoticeLog(NSString* format, ...);
 void PIErrorLog(NSString* format, ...);
