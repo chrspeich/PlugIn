@@ -34,6 +34,13 @@
 	return self;
 }
 
+- (void) dealloc
+{
+	[self setRegistryInfo:Nil];
+	
+	[super dealloc];
+}
+
 
 - (BOOL) setupError:(NSError**)anError
 {

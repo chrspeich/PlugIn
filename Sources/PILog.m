@@ -136,12 +136,16 @@ void PIDefaultLogMessageDriver(PILogLevel level, NSString* message)
 		case PINoticeLogLevel:
 			prefix = @"[NOTICE]";
 			break;
+#ifdef PI_HAVE_DEBUGLOG
 		case PIDebugLogLevel:
 			prefix = @"[DEBUG]";
 			break;
-		case PIDebugLogLevel:
+#endif
+#ifdef PI_HAVE_TRACELOG
+		case PITraceLogLevel:
 			prefix = @"[TRACE]";
 			break;
+#endif
 		default:
 			prefix = @"";
 			break;
