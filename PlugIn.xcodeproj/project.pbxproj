@@ -164,7 +164,6 @@
 				8DC2EF520486A6940098B216 /* Resources */,
 				8DC2EF540486A6940098B216 /* Sources */,
 				8DC2EF560486A6940098B216 /* Frameworks */,
-				92952BDA0FCB3D8E00F3D16C /* Automatic hg changeset number */,
 			);
 			buildRules = (
 			);
@@ -208,23 +207,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		92952BDA0FCB3D8E00F3D16C /* Automatic hg changeset number */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Automatic hg changeset number";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /usr/bin/python;
-			shellScript = "import re\nimport plistlib\nfrom os.path import join\nimport os\n\np = re.compile(r'(?P<changeset>\\d*:[0-9A-Fa-f]*)$')\n\ninfo = join('/', os.environ['BUILT_PRODUCTS_DIR'], os.environ['WRAPPER_NAME'], 'Resources/Info.plist')\n\ntry:\n\n\tinfoPlist = plistlib.readPlist(info)\n\n\thgData = os.popen('/usr/local/bin/hg log -l 1 | head -n 1').read()\n\n\tprint hgData\n\n\tchangeset = p.search(hgData).group('changeset')\n\n\tprint changeset\n\n\tinfoPlist['CFBundleVersion'] = changeset\n\n\tplistlib.writePlist(infoPlist, info)\nexcept:\n\tprint \"No mercurial repo\"";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DC2EF540486A6940098B216 /* Sources */ = {
@@ -300,7 +282,6 @@
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = 4.0;
@@ -316,7 +297,6 @@
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_VERSION = 4.0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
